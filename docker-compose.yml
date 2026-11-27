@@ -1,0 +1,21 @@
+services:
+  oracle:
+    image: gvenzl/oracle-free:slim-faststart
+    container_name: oracle-ordenes
+    ports:
+      - "1522:1521"
+    environment:
+      ORACLE_PASSWORD: admin123
+      APP_USER: ordenes
+      APP_USER_PASSWORD: ordenes
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  oracle-data:

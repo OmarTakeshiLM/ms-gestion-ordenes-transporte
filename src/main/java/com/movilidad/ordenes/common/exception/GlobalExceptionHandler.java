@@ -13,6 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -82,5 +83,11 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleMaxSize(MaxUploadSizeExceededException ex, HttpServletRequest request) {
         log.warn("Archivo demasiado grande en {}", request.getRequestURI());
         return problem(HttpStatus.PAYLOAD_TOO_LARGE, "El archivo supera el tamaño máximo permitido (10 MB)", request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ProblemDetail handleAuthentication(AuthenticationException ex, HttpServletRequest request) {
+        log.warn("Intento de inicio de sesión fallido: {}", ex.getMessage());
+        return problem(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos", request);
     }
 }
